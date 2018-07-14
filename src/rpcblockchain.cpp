@@ -388,7 +388,22 @@ Value getblock(const Array& params, bool fHelp)
     CBlockIndex* pblockindex = mapBlockIndex[hash];
     block.ReadFromDisk(pblockindex, true);
 
-    return blockToJSON(block, pblockindex, params.size() > 1 ? params[1].get_bool() : false);
+    int verbosity = 1;
+    if (params.size() > 1) {
+        if (params[1].is_int()) {
+            verbosity = params[1].get_int();
+        } else {
+            verbosity = params[1].get_bool() ? 1 : 0;
+        }
+    }
+
+    if (verbosity <= 0){
+        CDataStream ssBlock(SER_NETWORK, PROTOCOL_VERSION);
+        ssBlock << block;
+        return HexStr(ssBlock.begin(), ssBlock.end());
+    }
+
+    return blockToJSON(block, pblockindex, verbosity >= 2);
 }
 
 Value getblockbynumber(const Array& params, bool fHelp)

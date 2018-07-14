@@ -61,6 +61,8 @@ namespace json_spirit
         Value_type type() const;
 
         bool is_uint64() const;
+        bool is_int() const;
+        bool is_bool() const;
         bool is_null() const;
 
         const String_type& get_str()    const;
@@ -336,6 +338,18 @@ namespace json_spirit
     bool Value_impl< Config >::is_null() const
     {
         return type() == null_type;
+    }
+
+    template< class Config >
+    bool Value_impl< Config >::is_int() const
+    {
+        return type() == int_type;
+    }
+
+    template< class Config >
+    bool Value_impl< Config >::is_bool() const
+    {
+        return type() == bool_type;
     }
 
     template< class Config >
